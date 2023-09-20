@@ -1,0 +1,34 @@
+---
+RecipeFormatVersion: "2020-01-25"
+ComponentName: "{COMPONENT_NAME}"
+ComponentVersion: "{COMPONENT_VERSION}"
+ComponentDescription: "This is a simple Hello World component written in Python."
+ComponentPublisher: "{COMPONENT_AUTHOR}"
+ComponentConfiguration:
+  DefaultConfiguration:
+    Message: "World"
+    Period: 0.5
+    accessControl:
+      aws.greengrass.ipc.mqttproxy:
+        com.mike.HelloWorld:pubsub:1:
+          policyDescription: Publish and subscribe to any topic
+          operations:
+            - aws.greengrass#PublishToIoTCore
+            - aws.greengrass#SubscribeToIoTCore
+          resources:
+            - "*"
+Manifests:
+  - Platform:
+      os: all
+    Artifacts:
+      - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/HelloWorld.zip"
+        Unarchive: ZIP
+    Lifecycle:
+      Install: python3 -m pip install virtualenv && 
+        python3 -m virtualenv venv &&
+        source ./venv/bin/activate &&
+        pip install -r {artifacts:decompressedPath}/HelloWorld/requirements.txt
+      Run: source ./venv/bin/activate &&
+        python3 -u {artifacts:decompressedPath}/HelloWorld/main.py
+        {configuration:/Message}
+        --period {configuration:/Period}

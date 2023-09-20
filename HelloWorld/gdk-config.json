@@ -1,0 +1,16 @@
+{
+  "component": {
+    "com.mike.HelloWorld": {
+      "author": "mikelikesrobots",
+      "version": "NEXT_PATCH",
+      "build": {
+        "build_system": "zip"
+      },
+      "publish": {
+        "bucket": "greengrass-components",
+        "region": "us-west-2"
+      }
+    }
+  },
+  "gdk_version": "1.0.0"
+}
